@@ -26,11 +26,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -188,9 +193,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(24.37914471, 88.6219901);
-        marker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+
+        marker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Employee"));
         marker2 = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.setMinZoomPreference(12);
+
+//        LatLng latLng = new LatLng();
+//        try {
+//            JSONArray jsonArray = new JSONArray("[{\"latitude\":24.3791347,\"longitude\":88.621968,\"time\":1617289405633},{\"latitude\":25.3791452,\"longitude\":86.621969,\"time\":1617289411821},{\"latitude\":27.3791441,\"longitude\":88.621958,\"time\":1617289418837},{\"latitude\":28.3791327,\"longitude\":88.6219591,\"time\":1617289429016},{\"latitude\":29.3791502,\"longitude\":88.6219612,\"time\":1617289434761},{\"latitude\":30.3791349,\"longitude\":88.6219589,\"time\":1617289440683},{\"latitude\"31.3791421,\"longitude\":88.6219661,\"time\":1617289456494},{\"latitude\":32.3792372,\"longitude\":88.6219803,\"time\":1617289462343},{\"latitude\":33.3791596,\"longitude\":88.6219679,\"time\":1617289468321},{\"latitude\":34.3791317,\"longitude\":88.6219622,\"time\":1617289474380},{\"latitude\":35.3791495,\"longitude\":88.6219699,\"time\":1617289480144},{\"latitude\":36.3792111,\"longitude\":88.62198,\"time\":1617289499204},{\"latitude\":37.3791429,\"longitude\":88.6219611,\"time\":1617289504957},{\"latitude\":38.3791281,\"longitude\":88.6219636,\"time\":1617289511316}]");
+//
+//            for(int i = 0 ; i<jsonArray.length(); i++){
+//
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+
+
+        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+                .clickable(true)
+                .add(
+                        new LatLng(24.3791347, 88.621968),
+                        new LatLng(25.3791452, 86.621969),
+                        new LatLng(27.3791441, 88.621958),
+                        new LatLng(28.3791327, 88.6219591),
+                        new LatLng(29.3791502, 88.6219612)
+                ));
+
+        //mMap.setMinZoomPreference(12);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker2.getPosition()));
