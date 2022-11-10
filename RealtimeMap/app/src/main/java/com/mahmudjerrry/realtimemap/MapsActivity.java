@@ -110,9 +110,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
-
     }
-       private PendingIntent getPendingIntent() {
+    private PendingIntent getPendingIntent() {
 
         Intent intent = new Intent(this,MyBroadcastServices.class);
         intent.setAction(MyBroadcastServices.ACTION_PROCESS_UPDATE);

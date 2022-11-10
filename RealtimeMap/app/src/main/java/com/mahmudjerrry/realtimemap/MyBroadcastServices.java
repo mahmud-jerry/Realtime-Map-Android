@@ -34,9 +34,9 @@ public class MyBroadcastServices extends BroadcastReceiver {
                     Location location = result.getLastLocation();
                     String  stringBuilder = new StringBuilder(" "+location.getLatitude()).append("/").append(location.getLongitude()).toString();
 
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    myreference = database.getReference("message");
-                    myreference.setValue(location);
+                    //FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                    myreference = database.getReference("message");
+//                    myreference.setValue(location);
                     Utils.sendNotification(context, Utils.getLocationResultTitle(context, location));
                     Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     MediaPlayer mp = MediaPlayer.create(context.getApplicationContext(), notification);
