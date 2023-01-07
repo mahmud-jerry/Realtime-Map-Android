@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Student App</string>
+    <string name="title_activity_maps">Student App</string>
+    <array name="busarray">
+        <item>Bus - 1</item>
+        <item>Bus - 2</item>
+    </array>
+</resources>
