@@ -38,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -48,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final int MIN_TIME = 1000;
     private final int MIN_DIS = 1;
     Marker marker , marker2 ;
+    Random random ;
 
     LocationRequest locationRequest;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -56,6 +58,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        random = new Random();
 
         //FirebaseDatabase.getInstance().getReference().setValue("this is tracker app");
 
@@ -91,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getLocationiUpdates();
         updateLocation();
         readChanges();
-        readChange2();
+        //readChange2();
     }
 
     private void buildLocationRequest() {
@@ -101,16 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setFastestInterval(1000);
         locationRequest.setSmallestDisplacement(1f);
     }
-    private void updateLocation() {
-        buildLocationRequest();
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
-    }
     private PendingIntent getPendingIntent() {
 
         Intent intent = new Intent(this,MyBroadcastServices.class);
@@ -121,29 +116,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    private void readChange2() {
-        reference1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try{
-                    RealtimeLocation location = snapshot.getValue(RealtimeLocation.class);
-                    if(location!=null){
-                        marker2.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
-                    }
-                }catch (Exception e){
-                    Toast.makeText(MapsActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                    Log.e("error",e.toString());
-                }
 
-            }
+    private void updateLocation() {
+        buildLocationRequest();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            }
-        });
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
     }
-
     private void getLocationiUpdates() {
         if(manager!=null){
             if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED&&
@@ -194,7 +177,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(24.37914471, 88.6219901);
 
         marker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Employee"));
-        marker2 = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //marker2 = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
 //        LatLng latLng = new LatLng();
 //        try {
@@ -209,25 +192,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
-                .clickable(true)
-                .add(
-                        new LatLng(24.3791347, 88.621968),
-                        new LatLng(25.3791452, 86.621969),
-                        new LatLng(27.3791441, 88.621958),
-                        new LatLng(28.3791327, 88.6219591),
-                        new LatLng(29.3791502, 88.6219612)
-                ));
+//        Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
+//                .clickable(true)
+//                .add(
+//                        new LatLng(24.3791347, 88.621968),
+//                        new LatLng(25.3791452, 86.621969),
+//                        new LatLng(27.3791441, 88.621958),
+//                        new LatLng(28.3791327, 88.6219591),
+//                        new LatLng(29.3791502, 88.6219612)
+//                ));
 
         //mMap.setMinZoomPreference(12);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker2.getPosition()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+
     }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         if(location!=null){
+            marker.setPosition(new LatLng(location.getLatitude()+randomNum(),location.getLongitude()));
+
             saveLocation(location);
             Log.e("latlang",location.getLatitude()+"lang"+location.getLongitude());
         }else{
@@ -244,12 +230,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try{
                     RealtimeLocation location = snapshot.getValue(RealtimeLocation.class);
+                    Log.e("onchange","changed");
                     if(location!=null){
-                            marker.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
+                            marker.setPosition(new LatLng(location.getLatitude()+randomNum(),location.getLongitude()));
+//                        LatLng latLng = new LatLng(location.getLatitude()+randomNum(), location.getLongitude());
+//                        mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Employee"));
+//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
                     }
                 }catch (Exception e){
                     Toast.makeText(MapsActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                    Log.e("error",e.toString());
+                    Log.e("error-hell-1",e.toString());
                 }
 
             }
@@ -259,5 +250,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+    }
+    private void readChange2() {
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try{
+                    RealtimeLocation location = snapshot.getValue(RealtimeLocation.class);
+                    if(location!=null){
+                        marker2.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
+                    }
+                }catch (Exception e){
+                    Toast.makeText(MapsActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                    Log.e("error-hell-2",e.toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    float randomNum(){
+        int x = random.nextInt(6) + 5;
+        return Float.valueOf(String.valueOf(x));
     }
 }

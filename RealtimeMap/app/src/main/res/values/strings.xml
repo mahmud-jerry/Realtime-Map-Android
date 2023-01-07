@@ -10,4 +10,7 @@
     <string name="request_updates">Request updates</string>
     <string name="remove_updates">Remove updates</string>
     <string name="unknown_location">Unknown location</string>
+    <string name="title_activity_maps2">Map</string>
+    <string name="google_maps_key">AIzaSyDW7gZnPNLjsIUIeb90KXkJ3VR9NqQ8rlk</string>
+
 </resources>
